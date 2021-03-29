@@ -53,7 +53,7 @@ class Character extends FlxSprite
 		{
 			case 'gf':
 				// GIRLFRIEND CODE
-				tex = FlxAtlasFrames.fromSparrow('assets/images/GF_assets.png', 'assets/images/GF_assets.xml');
+				tex = Paths.getSparrowAtlas('GF_assets');
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singLEFT', 'GF left note', 24, false);
@@ -82,9 +82,9 @@ class Character extends FlxSprite
 				addOffset('scared', -2, -17);
 
 				playAnim('danceRight');
-				like = "gf";
+
 			case 'gf-christmas':
-				tex = FlxAtlasFrames.fromSparrow('assets/images/christmas/gfChristmas.png', 'assets/images/christmas/gfChristmas.xml');
+				tex = Paths.getSparrowAtlas('christmas/gfChristmas');
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singLEFT', 'GF left note', 24, false);
@@ -113,23 +113,22 @@ class Character extends FlxSprite
 				addOffset('scared', -2, -17);
 
 				playAnim('danceRight');
-				like ="gf";
+
 			case 'gf-car':
-				tex = FlxAtlasFrames.fromSparrow('assets/images/gfCar.png', 'assets/images/gfCar.xml');
+				tex = Paths.getSparrowAtlas('gfCar');
 				frames = tex;
 				animation.addByIndices('singUP', 'GF Dancing Beat Hair blowing CAR', [0], "", 24, false);
 				animation.addByIndices('danceLeft', 'GF Dancing Beat Hair blowing CAR', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
 				animation.addByIndices('danceRight', 'GF Dancing Beat Hair blowing CAR', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24,
-					false);
+				false);
 
 				addOffset('danceLeft', 0);
 				addOffset('danceRight', 0);
 
 				playAnim('danceRight');
-				like = "gf-car";
 
 			case 'gf-pixel':
-				tex = FlxAtlasFrames.fromSparrow('assets/images/weeb/gfPixel.png', 'assets/images/weeb/gfPixel.xml');
+				tex = Paths.getSparrowAtlas('weeb/gfPixel');
 				frames = tex;
 				animation.addByIndices('singUP', 'GF IDLE', [2], "", 24, false);
 				animation.addByIndices('danceLeft', 'GF IDLE', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
@@ -143,11 +142,10 @@ class Character extends FlxSprite
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 				updateHitbox();
 				antialiasing = false;
-				isPixel = true;
-				like = "gf-pixel";
+
 			case 'dad':
 				// DAD ANIMATION LOADING CODE
-				tex = FlxAtlasFrames.fromSparrow('assets/images/DADDY_DEAREST.png', 'assets/images/DADDY_DEAREST.xml');
+				tex = Paths.getSparrowAtlas('DADDY_DEAREST');
 				frames = tex;
 				animation.addByPrefix('idle', 'Dad idle dance', 24);
 				animation.addByPrefix('singUP', 'Dad Sing Note UP', 24);
@@ -162,9 +160,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN", 0, -30);
 
 				playAnim('idle');
-				like = "dad";
 			case 'spooky':
-				tex = FlxAtlasFrames.fromSparrow('assets/images/spooky_kids_assets.png', 'assets/images/spooky_kids_assets.xml');
+				tex = Paths.getSparrowAtlas('spooky_kids_assets');
 				frames = tex;
 				animation.addByPrefix('singUP', 'spooky UP NOTE', 24, false);
 				animation.addByPrefix('singDOWN', 'spooky DOWN note', 24, false);
@@ -182,9 +179,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN", -50, -130);
 
 				playAnim('danceRight');
-				like = "spooky";
 			case 'mom':
-				tex = FlxAtlasFrames.fromSparrow('assets/images/Mom_Assets.png', 'assets/images/Mom_Assets.xml');
+				tex = Paths.getSparrowAtlas('Mom_Assets');
 				frames = tex;
 
 				animation.addByPrefix('idle', "Mom Idle", 24, false);
@@ -202,9 +198,9 @@ class Character extends FlxSprite
 				addOffset("singDOWN", 20, -160);
 
 				playAnim('idle');
-				like = "mom";
+
 			case 'mom-car':
-				tex = FlxAtlasFrames.fromSparrow('assets/images/momCar.png', 'assets/images/momCar.xml');
+				tex = Paths.getSparrowAtlas('momCar');
 				frames = tex;
 
 				animation.addByPrefix('idle', "Mom Idle", 24, false);
@@ -222,9 +218,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN", 20, -160);
 
 				playAnim('idle');
-				like = "mom";
 			case 'monster':
-				tex = FlxAtlasFrames.fromSparrow('assets/images/Monster_Assets.png', 'assets/images/Monster_Assets.xml');
+				tex = Paths.getSparrowAtlas('Monster_Assets');
 				frames = tex;
 				animation.addByPrefix('idle', 'monster idle', 24, false);
 				animation.addByPrefix('singUP', 'monster up note', 24, false);
@@ -236,12 +231,10 @@ class Character extends FlxSprite
 				addOffset("singUP", -20, 50);
 				addOffset("singRIGHT", -51);
 				addOffset("singLEFT", -30);
-				addOffset("singDOWN", -40, -94);
+				addOffset("singDOWN", -30, -40);
 				playAnim('idle');
-				// like new monster due to new assets
-				like = "newmonster";
 			case 'monster-christmas':
-				tex = FlxAtlasFrames.fromSparrow('assets/images/christmas/monsterChristmas.png', 'assets/images/christmas/monsterChristmas.xml');
+				tex = Paths.getSparrowAtlas('christmas/monsterChristmas');
 				frames = tex;
 				animation.addByPrefix('idle', 'monster idle', 24, false);
 				animation.addByPrefix('singUP', 'monster up note', 24, false);
@@ -255,9 +248,8 @@ class Character extends FlxSprite
 				addOffset("singLEFT", -30);
 				addOffset("singDOWN", -40, -94);
 				playAnim('idle');
-				like = "newmonster";
 			case 'pico':
-				tex = FlxAtlasFrames.fromSparrow('assets/images/Pico_FNF_assetss.png', 'assets/images/Pico_FNF_assetss.xml');
+				tex = Paths.getSparrowAtlas('Pico_FNF_assetss');
 				frames = tex;
 				animation.addByPrefix('idle', "Pico Idle Dance", 24);
 				animation.addByPrefix('singUP', 'pico Up note0', 24, false);
@@ -294,9 +286,9 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
-				like = "pico";
+
 			case 'bf':
-				var tex = FlxAtlasFrames.fromSparrow('assets/images/BOYFRIEND.png', 'assets/images/BOYFRIEND.xml');
+				var tex = Paths.getSparrowAtlas('BOYFRIEND');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -333,9 +325,9 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
-				like = "bf";
+
 			case 'bf-christmas':
-				var tex = FlxAtlasFrames.fromSparrow('assets/images/christmas/bfChristmas.png', 'assets/images/christmas/bfChristmas.xml');
+				var tex = Paths.getSparrowAtlas('christmas/bfChristmas');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -362,9 +354,8 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
-				like = "bf";
 			case 'bf-car':
-				var tex = FlxAtlasFrames.fromSparrow('assets/images/bfCar.png', 'assets/images/bfCar.xml');
+				var tex = Paths.getSparrowAtlas('bfCar');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -388,9 +379,8 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
-				like = "bf";
 			case 'bf-pixel':
-				frames = FlxAtlasFrames.fromSparrow('assets/images/weeb/bfPixel.png', 'assets/images/weeb/bfPixel.xml');
+				frames = Paths.getSparrowAtlas('weeb/bfPixel');
 				animation.addByPrefix('idle', 'BF IDLE', 24, false);
 				animation.addByPrefix('singUP', 'BF UP NOTE', 24, false);
 				animation.addByPrefix('singLEFT', 'BF LEFT NOTE', 24, false);
@@ -420,11 +410,10 @@ class Character extends FlxSprite
 				height -= 100;
 
 				antialiasing = false;
-				isPixel = true;
+
 				flipX = true;
-				like = "bf-pixel";
 			case 'bf-pixel-dead':
-				frames = FlxAtlasFrames.fromSparrow('assets/images/weeb/bfPixelsDEAD.png', 'assets/images/weeb/bfPixelsDEAD.xml');
+				frames = Paths.getSparrowAtlas('weeb/bfPixelsDEAD');
 				animation.addByPrefix('singUP', "BF Dies pixel", 24, false);
 				animation.addByPrefix('firstDeath', "BF Dies pixel", 24, false);
 				animation.addByPrefix('deathLoop', "Retry Loop", 24, true);
@@ -440,10 +429,9 @@ class Character extends FlxSprite
 				updateHitbox();
 				antialiasing = false;
 				flipX = true;
-				isPixel = true;
-				like = "bf-pixel";
+
 			case 'senpai':
-				frames = FlxAtlasFrames.fromSparrow('assets/images/weeb/senpai.png', 'assets/images/weeb/senpai.xml');
+				frames = Paths.getSparrowAtlas('weeb/senpai');
 				animation.addByPrefix('idle', 'Senpai Idle', 24, false);
 				animation.addByPrefix('singUP', 'SENPAI UP NOTE', 24, false);
 				animation.addByPrefix('singLEFT', 'SENPAI LEFT NOTE', 24, false);
@@ -462,10 +450,8 @@ class Character extends FlxSprite
 				updateHitbox();
 
 				antialiasing = false;
-				isPixel = true;
-				like = "senpai";
 			case 'senpai-angry':
-				frames = FlxAtlasFrames.fromSparrow('assets/images/weeb/senpai.png', 'assets/images/weeb/senpai.xml');
+				frames = Paths.getSparrowAtlas('weeb/senpai');
 				animation.addByPrefix('idle', 'Angry Senpai Idle', 24, false);
 				animation.addByPrefix('singUP', 'Angry Senpai UP NOTE', 24, false);
 				animation.addByPrefix('singLEFT', 'Angry Senpai LEFT NOTE', 24, false);
@@ -481,11 +467,11 @@ class Character extends FlxSprite
 
 				setGraphicSize(Std.int(width * 6));
 				updateHitbox();
-				isPixel = true;
+
 				antialiasing = false;
-				like = "senpai";
+
 			case 'spirit':
-				frames = FlxAtlasFrames.fromSpriteSheetPacker('assets/images/weeb/spirit.png', 'assets/images/weeb/spirit.txt');
+				frames = Paths.getPackerAtlas('weeb/spirit');
 				animation.addByPrefix('idle', "idle spirit_", 24, false);
 				animation.addByPrefix('singUP', "up_", 24, false);
 				animation.addByPrefix('singRIGHT', "right_", 24, false);
@@ -502,12 +488,11 @@ class Character extends FlxSprite
 				updateHitbox();
 
 				playAnim('idle');
-				isPixel = true;
+
 				antialiasing = false;
-				like = "spirit";
+
 			case 'parents-christmas':
-				frames = FlxAtlasFrames.fromSparrow('assets/images/christmas/mom_dad_christmas_assets.png',
-					'assets/images/christmas/mom_dad_christmas_assets.xml');
+				frames = Paths.getSparrowAtlas('christmas/mom_dad_christmas_assets');
 				animation.addByPrefix('idle', 'Parent Christmas Idle', 24, false);
 				animation.addByPrefix('singUP', 'Parent Up Note Dad', 24, false);
 				animation.addByPrefix('singDOWN', 'Parent Down Note Dad', 24, false);
@@ -529,9 +514,10 @@ class Character extends FlxSprite
 				addOffset("singRIGHT-alt", -1, -24);
 				addOffset("singLEFT-alt", -30, 15);
 				addOffset("singDOWN-alt", -30, -27);
-				like = "parents";
+
+				playAnim('idle');
 			default:
-				#if sys
+			// i gave up on html at this point
 				// assume it is a custom character. if not: oh well
 				// protective ritual to protect against new lines
 				curCharacter = curCharacter.trim();
@@ -545,7 +531,7 @@ class Character extends FlxSprite
 				var charJson:Dynamic = null;
 				var isError:Bool = false;
 				try {
-					charJson = CoolUtil.parseJson(Assets.getText('assets/images/custom_chars/custom_chars.jsonc'));
+					charJson = CoolUtil.parseJson(File.getContent('assets/custom/char/custom_chars.jsonc'));
 				} catch (exception) {
 					// uh oh someone messed up their json
 					Application.current.window.alert("Hey! You messed up your custom_chars.jsonc. Your game won't crash but it will load bf. "+exception, "Alert");
@@ -553,7 +539,7 @@ class Character extends FlxSprite
 				}
 				if (!isError) {
 					// use assets, as it is less laggy
-					var animJson = File.getContent("assets/images/custom_chars/"+Reflect.field(charJson,curCharacter).like+".json");
+					var animJson = File.getContent("assets/custom/char/"+Reflect.field(charJson,curCharacter).like+".json");
 					var parsedAnimJson:Dynamic = CoolUtil.parseJson(animJson);
 
 
@@ -564,20 +550,17 @@ class Character extends FlxSprite
 						parsedAnimJson.animation = parsedAnimJson.deadAnimation;
 						parsedAnimJson.offset = parsedAnimJson.deadOffset;
 					}
-					var rawPic = BitmapData.fromFile('assets/images/custom_chars/'+curCharacter+"/"+playerSuffix+".png");
+					var rawPic = BitmapData.fromFile('assets/custom/char/'+curCharacter+"/"+playerSuffix+".png");
 					var tex:FlxAtlasFrames;
 					var rawXml:String;
 					// GOD IS DEAD WHY DOES THIS NOT WORK
-					trace("line 572");
-					if (FileSystem.exists('assets/images/custom_chars/'+curCharacter+"/"+playerSuffix+".txt")){
-						rawXml = File.getContent('assets/images/custom_chars/'+curCharacter+"/"+playerSuffix+".txt");
+					if (FileSystem.exists('assets/custom/char/'+curCharacter+"/"+playerSuffix+".txt")){
+						rawXml = File.getContent('assets/custom/char/'+curCharacter+"/"+playerSuffix+".txt");
 						tex = FlxAtlasFrames.fromSpriteSheetPacker(rawPic,rawXml);
 					} else {
-						rawXml = File.getContent('assets/images/custom_chars/'+curCharacter+"/"+playerSuffix+".xml");
+						rawXml = File.getContent('assets/custom/char/'+curCharacter+"/"+playerSuffix+".xml");
 						tex = FlxAtlasFrames.fromSparrow(rawPic,rawXml);
 					}
-
-					trace("line 581");
 					frames = tex;
 
 					for( field in Reflect.fields(parsedAnimJson.animation) ) {
@@ -604,10 +587,10 @@ class Character extends FlxSprite
 								animation.addByIndices(field, Reflect.field(parsedAnimJson.animation,field).name, indicesAnim, "", fps, !!Reflect.field(parsedAnimJson.animation,field).loop);
 							} else {
 								animation.addByPrefix(field,Reflect.field(parsedAnimJson.animation,field).name, fps, !!Reflect.field(parsedAnimJson.animation,field).loop);
+								trace(field); //cant stand this shit
 							}
 						}
 					}
-					trace("before offset");
 					for( field in Reflect.fields(parsedAnimJson.offset)) {
 						addOffset(field, Reflect.field(parsedAnimJson.offset,field)[0],  Reflect.field(parsedAnimJson.offset,field)[1]);
 					}
@@ -620,7 +603,6 @@ class Character extends FlxSprite
 					midpointX = if (parsedAnimJson.midpoint != null) parsedAnimJson.midpoint[0] else 0;
 					midpointY = if (parsedAnimJson.midpoint != null) parsedAnimJson.midpoint[1] else 0;
 					flipX = if (parsedAnimJson.flipx != null) parsedAnimJson.flipx else false;
-					trace("before like");
 
 					like = parsedAnimJson.like;
 					if (like == "bf-car") {
@@ -633,19 +615,15 @@ class Character extends FlxSprite
 						setGraphicSize(Std.int(width * 6));
 						updateHitbox(); // when the hitbox is sus!
 					}
-					trace("tgiu");
 					if (!isDie) {
 						width += if (parsedAnimJson.size != null) parsedAnimJson.size[0] else 0;
 						height += if (parsedAnimJson.size != null) parsedAnimJson.size[1] else 0;
 					}
-					trace("heblo");
-					trace(parsedAnimJson.playAnim);
 					playAnim(parsedAnimJson.playAnim);
-					trace("hmmb");
 				} else {
 					// uh oh we got an error
 					// pretend its boyfriend to prevent crashes
-					var tex = FlxAtlasFrames.fromSparrow('assets/images/BOYFRIEND.png', 'assets/images/BOYFRIEND.xml');
+					var tex = Paths.getSparrowAtlas('BOYFRIEND');
 					frames = tex;
 					animation.addByPrefix('idle', 'BF idle dance', 24, false);
 					animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -684,9 +662,8 @@ class Character extends FlxSprite
 					playAnim('idle');
 				}
 
-				#else
-				// pretend its boyfriend, screw html5
-				var tex = FlxAtlasFrames.fromSparrow('assets/images/BOYFRIEND.png', 'assets/images/BOYFRIEND.xml');
+				/*// pretend its boyfriend, screw html5 // screw html5 indeed
+				var tex = Paths.getSparrowAtlas('BOYFRIEND');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -722,8 +699,7 @@ class Character extends FlxSprite
 
 				flipX = true;
 				like = "bf";
-				playAnim('idle');
-				#end
+				playAnim('idle');*/
 		}
 		trace("727");
 
@@ -735,7 +711,7 @@ class Character extends FlxSprite
 		{
 			flipX = !flipX;
 			// Doesn't flip for BF, since his are already in the right place???
-			if (like != "bf" && like != "bf-pixel")
+			/*if (like != "bf" && like != "bf-pixel")
 			{
 				// var animArray
 				var oldRight = animation.getByName('singRIGHT').frames;
@@ -749,18 +725,12 @@ class Character extends FlxSprite
 					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
 					animation.getByName('singLEFTmiss').frames = oldMiss;
 				}
-			}
+			}*/
 		}
 	}
 
 	override function update(elapsed:Float)
 	{
-
-		//curCharacter = curCharacter.trim();
-		//var charJson:Dynamic = Json.parse(Assets.getText('assets/images/custom_chars/custom_chars.json'));
-		//var animJson = File.getContent("assets/images/custom_chars/"+Reflect.field(charJson,curCharacter).like+".json");
-
-		//if (!StringTools.contains(animJson, "firstDeath") && like != "bf-pixel") //supposed to fix note anim shit for bfs with unique jsons, currently broken
 		if (like != "bf" && like != "bf-pixel")
 		{
 			if (animation.curAnim.name.startsWith('sing'))
@@ -798,7 +768,6 @@ class Character extends FlxSprite
 	{
 		if (!debugMode)
 		{
-			trace("boogie'n");
 			switch (curCharacter)
 			{
 				case 'gf':
@@ -852,35 +821,20 @@ class Character extends FlxSprite
 					else
 						playAnim('danceLeft');
 				default:
-					if (like == "gf" || like == "spooky" || like == "gf-pixel" || like == "gf-car") {
-						if (!animation.curAnim.name.startsWith('hair'))
-						{
-							danced = !danced;
-							trace(danced);
-							if (danced)
-								playAnim('danceRight');
-							else
-								playAnim('danceLeft');
-						}
-					} else {
-						trace('jg');
-						playAnim('idle');
-					}
+					playAnim('idle');
 			}
 		}
 	}
 
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		trace("hmmst've");
-		trace(AnimName);
 		animation.play(AnimName, Force, Reversed, Frame);
-		trace("played anim");
-		trace(animation.curAnim);
+
 		var animName = "";
 		if (animation.curAnim == null) {
 			// P A N I K
 			animName = "idle";
+			trace("OH SHIT OH FUCK");
 		} else {
 			// kalm
 			animName = animation.curAnim.name;
@@ -892,8 +846,9 @@ class Character extends FlxSprite
 		}
 		else
 			offset.set(0, 0);
-		trace("hmmbxsze");
+		// trace("hmmbxsze"); //stop
 		// should spooky be on this?
+
 		if (like == 'gf'  || like == 'gf-pixel')
 		{
 			if (AnimName == 'singLEFT')
@@ -917,8 +872,8 @@ class Character extends FlxSprite
 		animOffsets[name] = [x, y];
 	}
 	public static function getAnimJson(char:String) {
-		var charJson = CoolUtil.parseJson(Assets.getText('assets/images/custom_chars/custom_chars.jsonc'));
-		var animJson = CoolUtil.parseJson(File.getContent('assets/images/custom_chars/'+Reflect.field(charJson,char).like + '.json'));
+		var charJson = CoolUtil.parseJson(Assets.getText('assets/custom/char/custom_chars.jsonc'));
+		var animJson = CoolUtil.parseJson(File.getContent('assets/custom/char/'+Reflect.field(charJson,char).like + '.json'));
 		return animJson;
 	}
 }

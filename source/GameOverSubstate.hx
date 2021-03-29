@@ -19,6 +19,7 @@ import flash.media.Sound;
 import haxe.Json;
 import tjson.TJSON;
 using StringTools;
+
 class GameOverSubstate extends MusicBeatSubstate
 {
 	var bf:Boyfriend;
@@ -37,9 +38,9 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 		var characterList = Assets.getText('assets/data/characterList.txt');
 		if (!StringTools.contains(characterList, p1)) {
-			var parsedCharJson:Dynamic = CoolUtil.parseJson(Assets.getText('assets/images/custom_chars/custom_chars.jsonc'));
+			var parsedCharJson:Dynamic = CoolUtil.parseJson(Assets.getText('assets/custom/char/custom_chars.jsonc'));
 			//another CTRL+C CTRL+V ritual
-			var unparsedAnimJson = File.getContent("assets/images/custom_chars/"+Reflect.field(parsedCharJson,p1).like+".json"); //it might keep throwing an error if i dont do this
+			var unparsedAnimJson = File.getContent("assets/custom/char/"+Reflect.field(parsedCharJson,p1).like+".json"); //it might keep throwing an error if i dont do this
 			var parsedAnimJson = CoolUtil.parseJson(unparsedAnimJson);
 			switch (parsedAnimJson.like) {
 				case "bf":
@@ -55,9 +56,10 @@ class GameOverSubstate extends MusicBeatSubstate
 						if (parsedAnimJson.isPixel)
 							stageSuffix = '-pixel'; //pixel check!
 					}
-					else
-					// just use bf, avoid pain
-					daBf = 'bf';
+					else{
+						// just use bf, avoid pain
+						daBf = 'bf';
+					}
 			}
 		} else {
 			switch (PlayState.SONG.player1) {
@@ -79,7 +81,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);
 		add(camFollow);
 
-		FlxG.sound.play('assets/sounds/fnf_loss_sfx' + stageSuffix + TitleState.soundExt);
+		FlxG.sound.play(Paths.sound('fnf_loss_sfx' + stageSuffix));
 		Conductor.changeBPM(100);
 
 		// FlxG.camera.followLerp = 1;
@@ -116,7 +118,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
 		{
-			FlxG.sound.playMusic('assets/music/gameOver' + stageSuffix + TitleState.soundExt);
+			FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix));
 		}
 
 		if (FlxG.sound.music.playing)
@@ -141,7 +143,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			isEnding = true;
 			bf.playAnim('deathConfirm', true);
 			FlxG.sound.music.stop();
-			FlxG.sound.play('assets/music/gameOverEnd' + stageSuffix + TitleState.soundExt);
+			FlxG.sound.play(Paths.music('gameOverEnd' + stageSuffix));
 			new FlxTimer().start(0.7, function(tmr:FlxTimer)
 			{
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()

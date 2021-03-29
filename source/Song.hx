@@ -5,31 +5,30 @@ import haxe.Json;
 import haxe.format.JsonParser;
 import lime.utils.Assets;
 import tjson.TJSON;
-#if sys
 import sys.io.File;
 import lime.system.System;
 import haxe.io.Path;
-#end
+
 using StringTools;
 
 typedef SwagSong =
 {
-	var song:String;
-	var notes:Array<SwagSection>;
-	var bpm:Int;
-	var sections:Int;
-	var sectionLengths:Array<Dynamic>;
-	var needsVoices:Bool;
-	var speed:Float;
+var song:String;
+var notes:Array<SwagSection>;
+var bpm:Int;
+var needsVoices:Bool;
+var speed:Float;
 
-	var player1:String;
-	var player2:String;
-	var stage:String;
-	var gf:String;
-	var isMoody:Null<Bool>;
-	var cutsceneType:String;
-	var uiType:String;
-	var isSpooky:Null<Bool>;
+var player1:String;
+var player2:String;
+var stage:String;
+var gf:String;
+var isMoody:Null<Bool>;
+var cutsceneType:String;
+var uiType:String;
+var isSpooky:Null<Bool>;
+var isHey:Null<Bool>;
+var validScore:Bool;
 }
 
 class Song
@@ -50,12 +49,14 @@ class Song
 	public var isSpooky:Null<Bool> = false;
 	public var cutsceneType:String = "none";
 	public var uiType:String = 'normal';
-	public function new(song, notes, bpm, sections)
+	public var isHey:Null<Bool> = false;
+
+
+	public function new(song, notes, bpm)
 	{
 		this.song = song;
 		this.notes = notes;
 		this.bpm = bpm;
-		this.sections = sections;
 
 		for (i in 0...notes.length)
 		{
@@ -69,17 +70,13 @@ class Song
 		if (jsonInput != folder)
 		{
 			// means this isn't normal difficulty
-			// raw json 
+			// raw json
 			// folder is always just the song name
 			rawJson = File.getContent("assets/data/"+folder.toLowerCase()+"/"+folder.toLowerCase()+".json").trim();
 		} else {
-			#if sys
-			rawJson = File.getContent("assets/data/" + folder.toLowerCase() + "/" + jsonInput.toLowerCase() + '.json').trim();
-			#else
-			rawJson = Assets.getText('assets/data/' + folder.toLowerCase() + '/' + jsonInput.toLowerCase() + '.json').trim();
-			#end
+			rawJson = File.getContent("assets/data/" + folder.toLowerCase() + "/" + jsonInput.toLowerCase() + '.json').trim(); //html5 cleaned again
 		}
-		
+
 		while (!rawJson.endsWith("}"))
 		{
 			rawJson = rawJson.substr(0, rawJson.length - 1);
@@ -187,12 +184,10 @@ class Song
 			var realJson = parseJSONshit(File.getContent("assets/data/" + folder.toLowerCase() + "/" + jsonInput.toLowerCase() + '.json').trim());
 			parsedJson.notes = realJson.notes;
 			parsedJson.bpm = realJson.bpm;
-			parsedJson.sections = realJson.sections;
-			parsedJson.sectionLengths = realJson.sectionLengths;
 			parsedJson.needsVoices = realJson.needsVoices;
 			parsedJson.speed = realJson.speed;
 		}
-		return parsedJson;
+		return parseJSONshit(rawJson);
 	}
 
 	public static function parseJSONshit(rawJson:String):SwagSong

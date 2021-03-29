@@ -13,8 +13,8 @@ import flash.media.Sound;
 import tjson.TJSON;
 import hscript.*;
 import haxe.Json;
-using StringTools;
 
+using StringTools;
 
 class CoolUtil
 {
@@ -29,6 +29,19 @@ class CoolUtil
 
 		return daList;
 	}
+
+	public static function coolStringFile(path:String):Array<String>
+	{
+		var daList:Array<String> = path.trim().split('\n');
+
+		for (i in 0...daList.length)
+		{
+			daList[i] = daList[i].trim();
+		}
+
+		return daList;
+	}
+
 	public static function coolDynamicTextFile(path:String):Array<String>
 	{
 		var daList:Array<String> = File.getContent(path).trim().split('\n');
@@ -57,8 +70,15 @@ class CoolUtil
 		// the reason we do this is to make it easy to swap out json parsers
 		return TJSON.parse(json);
 	}
-	public static function stringifyJson(json:Dynamic):String {
+	public static function stringifyJson(json:Dynamic, ?fancy:Bool = true):String {
 		// use tjson to prettify it
-		return TJSON.encode(json,'fancy');
+		var style:String = if (fancy) 'fancy' else null;
+		return TJSON.encode(json,style);
+	}
+
+	function mergeArray(base:Dynamic, ext:Dynamic){ //you know a better way but im keeping this anyway
+		var res = Reflect.copy(base);
+		for(f in Reflect.fields(ext)) Reflect.setField(res,f,Reflect.field(res,f));
+		return res;
 	}
 }

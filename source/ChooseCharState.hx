@@ -9,7 +9,6 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
-import DifficultyIcons;
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUI;
@@ -21,6 +20,7 @@ import flixel.ui.FlxButton;
 import flixel.ui.FlxSpriteButton;
 import flixel.addons.ui.FlxUITabMenu;
 import lime.system.System;
+import Discord;
 #if sys
 import sys.io.File;
 import haxe.io.Path;
@@ -28,7 +28,6 @@ import openfl.utils.ByteArray;
 import lime.media.AudioBuffer;
 import sys.FileSystem;
 import flash.media.Sound;
-
 #end
 import lime.ui.FileDialog;
 import lime.app.Event;
@@ -61,6 +60,7 @@ class ChooseCharState extends MusicBeatState
 
     override function create()
     {
+        var isError = false;
         var menuBG:FlxSprite = new FlxSprite().loadGraphic('assets/images/menuDesat.png');
         menuBG.color = 0xFFea71fd;
         grpAlphabet = new FlxTypedGroup<Alphabet>();
@@ -80,18 +80,25 @@ class ChooseCharState extends MusicBeatState
 
         var regCharacters:Array<String> = CoolUtil.coolTextFile('assets/data/characterList.txt');
 
-        charJson = CoolUtil.parseJson(Assets.getText('assets/images/custom_chars/custom_chars.jsonc'));
+        try { //prevents a crash so idk why i didnt do this
+            charJson = CoolUtil.parseJson(File.getContent('assets/custom/char/custom_chars.jsonc'));
+        } catch (exception) { // uh oh
+            isError = true;
+        }
 
         if (characters == null) {
             // that is not how arrays work
             // characters = mergeArray(Reflect.fields(charJson), Reflect.fields(regCharacters)); // this doesn't work, try to make this work or just ignore it
             // reg characters should be first
-            characters = regCharacters.concat(Reflect.fields(charJson));
+            if(isError == false)
+                characters = regCharacters.concat(Reflect.fields(charJson));
+            else
+                characters = regCharacters;
         }
 
 
         for(character in 0...characters.length){ //add chars
-            var awesomeChar = new Alphabet(0, 10, "   "+characters[character], true, false, false);
+            var awesomeChar = new Alphabet(0, 10, "   "+characters[character], true, false);
             awesomeChar.isMenuItem = true;
             awesomeChar.targetY = character;
             grpAlphabet.add(awesomeChar);
@@ -99,21 +106,18 @@ class ChooseCharState extends MusicBeatState
 
         add(grpAlphabet);
         trace("it's 11 pm"); //it's 12 pm
+        //lmfao kade engine
 
         super.create();
 
     }
     // i'd recommend moving smth like this to coolutil but w/e
-    function mergeArray(base:Dynamic, ext:Dynamic){ //need this to combine regular chars and customs, CHANGE THIS if you know a better way
-        var res = Reflect.copy(base);
-        for(f in Reflect.fields(ext)) Reflect.setField(res,f,Reflect.field(res,f));
-        return res;
-    }
-
+    // yeah sure
     override function update(elapsed:Float) {
         super.update(elapsed);
         if (controls.BACK) {
-                FlxG.switchState(new ModifierState());
+            FlxG.switchState(new ModifierState());
+            DiscordClient.changePresence("In the Menus", null);
         }
         if (controls.UP_P)
         {
@@ -125,7 +129,7 @@ class ChooseCharState extends MusicBeatState
         }
 
         if (controls.RIGHT_P || controls.LEFT_P) {
-                swapMenus();
+            swapMenus();
         }
 
         if (controls.ACCEPT)
@@ -134,9 +138,7 @@ class ChooseCharState extends MusicBeatState
 
     function changeSelection(change:Int = 0)
     {
-
-        FlxG.sound.play('assets/sounds/scrollMenu' + TitleState.soundExt, 0.4);
-
+        FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
         curSelected += change;
         curChar = characters[curSelected].toString();
 
@@ -186,8 +188,8 @@ class ChooseCharState extends MusicBeatState
 
     }
     // well yeah it lags you are creating a new character
-    function swapMenus() { //this lags somewhat on my end so please try to optimize it
-        FlxG.sound.play('assets/sounds/scrollMenu' + TitleState.soundExt, 0.4);
+    function swapMenus() { //this doesnt lag anymore because im a god
+        FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
         dadMenu = !dadMenu;
         remove(char);
         if (!dadMenu){ //cleaned this too
@@ -199,6 +201,9 @@ class ChooseCharState extends MusicBeatState
             char.flipX = false;
         }
         add(char);
+        if (char.like != "gf")
+            char.playAnim("idle");
+        DiscordClient.changePresence("Choosin' the Character", "Player 1: "+PlayState.SONG.player1+", Player 2: "+PlayState.SONG.player2);
         trace('switchin the swag');
     }
 }

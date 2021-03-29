@@ -43,19 +43,19 @@ class AnimationDebug extends FlxState
 		gridBG.scrollFactor.set(0.5, 0.5);
 		add(gridBG);
 
-			dad = new Character(100, 100, daAnim);
-			dad.debugMode = true;
-			add(dad);
+		dad = new Character(100, 100, daAnim);
+		dad.debugMode = true;
+		add(dad);
 
-			char = dad;
-			dad.flipX = false;
+		char = dad;
+		dad.flipX = false;
 
-			bf = new Boyfriend(770, 450, daOtherAnim);
-			bf.debugMode = true;
-			add(bf);
+		bf = new Boyfriend(770, 450, daOtherAnim);
+		bf.debugMode = true;
+		add(bf);
 
-			char = dad;
-			bf.flipX = false;
+		char = dad;
+		bf.flipX = false;
 
 		dumbTexts = new FlxTypedGroup<FlxText>();
 		add(dumbTexts);
@@ -92,15 +92,15 @@ class AnimationDebug extends FlxState
 
 		for (anim => offsets in char.animOffsets)
 		{
-			var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
-			text.scrollFactor.set();
-			text.color = FlxColor.BLUE;
-			dumbTexts.add(text);
+		var text:FlxText = new FlxText(10, 20 + (18 * daLoop), 0, anim + ": " + offsets, 15);
+		text.scrollFactor.set();
+		text.color = FlxColor.BLUE;
+		dumbTexts.add(text);
 
-			if (pushList)
-				animList.push(anim);
+		if (pushList)
+		animList.push(anim);
 
-			daLoop++;
+		daLoop++;
 		}
 	}
 
@@ -117,9 +117,8 @@ class AnimationDebug extends FlxState
 	{
 		/*
 		TODO
-
 		make cam offset editing better
-
+		still havent done it!
 		 */
 		textAnim.text = char.animation.curAnim.name;
 

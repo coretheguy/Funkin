@@ -9,25 +9,32 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
-import DifficultyIcons;
 import lime.system.System;
-#if sys
 import sys.io.File;
 import haxe.io.Path;
 import openfl.utils.ByteArray;
 import lime.media.AudioBuffer;
+import flixel.system.FlxSound;
 import sys.FileSystem;
 import flash.media.Sound;
+import haxe.Json;
+import tjson.TJSON;
+import Song.SwagSong;
+#if desktop
+import Discord.DiscordClient;
 #end
 import haxe.Json;
 import tjson.TJSON;
+
 using StringTools;
 
 class FreeplayState extends MusicBeatState
 {
 	public static var currentSongList:Array<String> = [];
+	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 	var songs:Array<String> = [];
 
+	public static var SONG:SwagSong;
 	var selector:FlxText;
 	var curSelected:Int = 0;
 	var curDifficulty:Int = 1;
@@ -36,7 +43,6 @@ class FreeplayState extends MusicBeatState
 	var diffText:FlxText;
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
-	var intendedAccuracy:Float = 0;
 	var lerpAccuracy:Int = 0;
 	var usingCategoryScreen:Bool = false;
 	private var grpSongs:FlxTypedGroup<Alphabet>;
@@ -44,9 +50,17 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
+		var initSonglist = File.getContent(Paths.jsonc('freeplaySongJson'));
+		var epicCategoryJs:Array<Dynamic> = CoolUtil.parseJson(initSonglist);
+		currentSongList = epicCategoryJs[0].songs; //eh who needs categories anyway
+
+
 		songs = currentSongList;
 
-		curDifficulty = DifficultyIcons.getDefaultDiffFP();
+		/*for (field in Reflect.field(SongJsonParsed.songs))
+		{
+			songs.push(new SongMetadata(initSonglist[i], 1, 'gf'));
+		}*/
 		/*
 			if (FlxG.sound.music != null)
 			{
@@ -60,6 +74,16 @@ class FreeplayState extends MusicBeatState
 		#if debug
 		isDebug = true;
 		#end
+
+			/*addWeek(['Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
+			addWeek(['Spookeez', 'South', 'Monster'], 2, ['spooky', 'spooky', 'monster']);
+			addWeek(['Pico', 'Philly', 'Blammed'], 3, ['pico']);
+
+			addWeek(['Satin-Panties', 'High', 'Milf'], 4, ['mom']);
+			addWeek(['Cocoa', 'Eggnog', 'Winter-Horrorland'], 5, ['parents-christmas', 'parents-christmas', 'monster-christmas']);
+			
+			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);*/
+
 
 		// LOAD MUSIC
 
@@ -77,6 +101,15 @@ class FreeplayState extends MusicBeatState
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpSongs.add(songText);
+
+			/*SONG = Song.loadFromJson(songs[i].toLowerCase(), songs[i].toLowerCase()); //what the hell
+			var icon:HealthIcon = new HealthIcon(SONG.player2);
+			icon.sprTracker = songText;
+
+			// using a FlxGroup is too much fuss!
+			iconArray.push(icon);
+			add(icon);*/ //i love this feature too much to cut it out but i genuinely have no idea how to fix it for a dynamic song list...
+
 			// songText.x += 40;
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
 			// songText.screenCenter(X);
@@ -130,6 +163,26 @@ class FreeplayState extends MusicBeatState
 		super.create();
 	}
 
+	/*public function addSong(songName:String, weekNum:Int, songCharacter:String)
+	{
+		songs.push(new SongMetadata(songName, weekNum, songCharacter));
+	}*/ //dont need this
+
+	/*public function addWeek(songs:Array<String>, weekNum:Int, ?songCharacters:Array<String>)
+	{
+		if (songCharacters == null)
+			songCharacters = ['bf'];
+
+		var num:Int = 0;
+		for (song in songs)
+		{
+			addSong(song, weekNum, songCharacters[num]);
+
+			if (songCharacters.length != 1)
+				num++;
+		}
+	}*/
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -138,13 +191,13 @@ class FreeplayState extends MusicBeatState
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
-		// why the fuck does this exist
+
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.4));
-		lerpAccuracy = Std.int(Math.round(intendedAccuracy * 100));
+
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
 
-		scoreText.text = "PERSONAL BEST:" + lerpScore + ", " + lerpAccuracy + "%";
+		scoreText.text = "PERSONAL BEST:" + lerpScore;
 
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
@@ -166,57 +219,61 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			// main menu or else we are cursed
-			
 			FlxG.switchState(new MainMenuState());
 		}
 
 		if (accepted)
 		{
-			var poop:String = songs[curSelected].toLowerCase() + DifficultyIcons.getEndingFP(curDifficulty);
+			var poop:String = Highscore.formatSong(songs[curSelected].toLowerCase(), curDifficulty);
+
 			trace(poop);
-			if (!FileSystem.exists('assets/data/'+songs[curSelected].toLowerCase()+'/'+poop.toLowerCase()+'.json')) {
+
+			if (!FileSystem.exists('assets/data/' + songs[curSelected].toLowerCase() + '/' + poop.toLowerCase() + '.json'))
+			{
 				// assume we pecked up the difficulty, return to default difficulty
 				trace("UH OH SONG IN SPECIFIED DIFFICULTY DOESN'T EXIST\nUSING DEFAULT DIFFICULTY");
 				poop = songs[curSelected];
-				curDifficulty = DifficultyIcons.getDefaultDiffFP();
-
+				curDifficulty = 1;
 			}
-			trace(poop);
 
 			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].toLowerCase());
 			PlayState.isStoryMode = false;
-			ModifierState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
-			if (!FlxG.save.data.options.skipModifierMenu)
-			 	FlxG.switchState(new ModifierState());
-			else {
-				if (FlxG.sound.music != null)
-					FlxG.sound.music.stop();
-				FlxG.switchState(new PlayState());
-			}
 
+			/*PlayState.storyWeek = songs[curSelected].week;
+			trace('CUR WEEK' + PlayState.storyWeek);*/
+			FlxG.switchState(new ModifierState()); //for now...
 		}
 	}
 
 	function changeDiff(change:Int = 0)
 	{
-		trace("line 182 fp");
-		var difficultyObject:Dynamic = DifficultyIcons.changeDifficultyFreeplay(curDifficulty,change);
-		curDifficulty = difficultyObject.difficulty;
+		curDifficulty += change;
+
+		if (curDifficulty < 0)
+			curDifficulty = 2;
+		if (curDifficulty > 2)
+			curDifficulty = 0;
 
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected], curDifficulty);
-		intendedAccuracy = Highscore.getAccuracy(songs[curSelected], curDifficulty);
 		#end
 
-		diffText.text = difficultyObject.text;
+		switch (curDifficulty)
+		{
+			case 0:
+				diffText.text = "EASY";
+			case 1:
+				diffText.text = 'NORMAL';
+			case 2:
+				diffText.text = "HARD";
+		}
 	}
 
 	function changeSelection(change:Int = 0)
 	{
 
-		FlxG.sound.play('assets/sounds/scrollMenu' + TitleState.soundExt, 0.4);
+		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
 		curSelected += change;
 
@@ -229,15 +286,19 @@ class FreeplayState extends MusicBeatState
 
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected], curDifficulty);
-		intendedAccuracy = Highscore.getAccuracy(songs[curSelected], curDifficulty);
 		// lerpScore = 0;
 		#end
-		#if sys
-			FlxG.sound.playMusic(Sound.fromFile("assets/music/"+songs[curSelected]+"_Inst"+TitleState.soundExt), 0);
-		#else
-		FlxG.sound.playMusic('assets/music/' + songs[curSelected] + "_Inst" + TitleState.soundExt, 0);
-		#end
+
+		FlxG.sound.playMusic(Sound.fromFile("assets/songs/"+songs[curSelected]+"/Inst."+SOUND_EXT), 0);
+
 		var bullShit:Int = 0;
+
+		/*for (i in 0...iconArray.length)
+		{
+			iconArray[i].alpha = 0.6;
+		}
+
+		iconArray[curSelected].alpha = 1;*/
 
 		for (item in grpSongs.members)
 		{
