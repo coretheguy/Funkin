@@ -415,10 +415,10 @@ class ChartingState extends MusicBeatState
 			// vocals.stop();
 		}
 
-		FlxG.sound.playMusic(Paths.inst(daSong), 0.6);
+		FlxG.sound.playMusic(Sound.fromFile("assets/songs/"+daSong+"/Inst.ogg"));
 
 		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
-		vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
+		vocals = new FlxSound().loadEmbedded(Sound.fromFile("assets/songs/"+daSong+"/Voices.ogg"));
 		FlxG.sound.list.add(vocals);
 
 		FlxG.sound.music.pause();
@@ -540,10 +540,11 @@ class ChartingState extends MusicBeatState
 		if (writingNotes)
 			writingNotesText.text = "WRITING NOTES";
 		else
-			writingNotesText.text = "";
+			writingNotesText.text = "NOT WRITING NOTES";
 
 		Conductor.songPosition = FlxG.sound.music.time;
 		_song.song = typingShit.text;
+
 		_song.player1 = player1TextField.text;
 		_song.player2 = player2TextField.text;
 		_song.gf = gfTextField.text;
