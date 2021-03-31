@@ -46,6 +46,8 @@ class FreeplayState extends MusicBeatState
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
+	private var iconArray:Array<HealthIcon> = [];
+
 	override function create()
 	{
 		var initSonglist = File.getContent(Paths.jsonc('freeplaySongJson'));
@@ -100,7 +102,7 @@ class FreeplayState extends MusicBeatState
 			songText.targetY = i;
 			grpSongs.add(songText);
 
-			/*SONG = Song.loadFromJson(songs[i].toLowerCase(), songs[i].toLowerCase()); //what the hell
+			/*SONG = Song.loadFromJson(songs[i].toLowerCase()); //what the hell
 			var icon:HealthIcon = new HealthIcon(SONG.player2);
 			icon.sprTracker = songText;
 

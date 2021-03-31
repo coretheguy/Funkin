@@ -57,6 +57,7 @@ class Song
 		this.bpm = bpm;
 	}
 
+
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
 		var rawJson:String = "";

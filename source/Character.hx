@@ -521,7 +521,6 @@ class Character extends FlxSprite
 				// assume it is a custom character. if not: oh well
 				// protective ritual to protect against new lines
 				curCharacter = curCharacter.trim();
-				trace(curCharacter);
 				isCustom = true;
 				if (StringTools.endsWith(curCharacter, "-dead")) {
 					isDie = true;

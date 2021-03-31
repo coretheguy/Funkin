@@ -174,6 +174,12 @@ class PlayState extends MusicBeatState
     public static var timeCurrently:Float = 0;
     public static var timeCurrentlyR:Float = 0;
 
+    //VARS FOR TRUE CUSTOM STAGE SHIT
+    var gfBehind = false;
+    var dadBehind = false;
+    var BGaboveGF:FlxSprite;
+    var BGaboveDAD:FlxSprite;
+
     override public function create()
     {
 
@@ -1177,7 +1183,68 @@ class PlayState extends MusicBeatState
                     bg.scrollFactor.set(0.8, 0.9);
                     bg.scale.set(6, 6);
                     add(bg);
-                default: //for some reason it didnt load a stage, so default to the regular stage
+                default: //THERE IS NO STAGE!!!
+                    if (FileSystem.exists('assets/custom/stage/'+SONG.stage+"/"+SONG.stage+".json")){ // LOAD A TRUE CUSTOM STAGE
+
+                        var parsedStage = CoolUtil.parseJson(File.getContent('assets/custom/stage/'+SONG.stage+"/"+SONG.stage+".json")); //parse shit
+
+                        curStage = parsedStage.name;
+
+                        if (Reflect.hasField(parsedStage, "camZoom"))
+                            defaultCamZoom = parsedStage.camZoom;
+                        else // no camzoom? default value then
+                            defaultCamZoom = 0.9;
+
+                        for(field in Reflect.fields(parsedStage.assets)){ //add assets
+
+                            var spritePic:BitmapData;
+
+                            var fieldname = Reflect.field(parsedStage, field);
+
+                            if (FileSystem.exists('assets/custom/stage/'+ curStage + '/' + Reflect.field(parsedStage, field) + "png"))
+                                spritePic = BitmapData.fromFile('assets/custom/stage/'+ curStage +"/" + Reflect.field(parsedStage, field) + ".png");
+                            else {//UMM UHHHH WHAT DO I DO
+                                spritePic = BitmapData.fromFile(Paths.image('stagefront')); //sure
+                                trace("IMAGE COULDNT LOAD SOMEHOW (not good)");
+                            }
+
+                            var assetX = if (fieldname.pos != null) fieldname.pos[0] else 0;
+                            var assetY = if (fieldname.pos != null) fieldname.pos[1] else 0;
+
+                            var assetScrollX = if (fieldname.scrollFactor != null) fieldname.scrollFactor[0] else 0;
+                            var assetScrollY = if (fieldname.scrollFactor != null) fieldname.scrollFactor[1] else 0;
+
+
+                            var spriteName:FlxSprite = new FlxSprite(assetX, assetY).loadGraphic(spritePic);
+
+                            if (Reflect.hasField(Reflect.field(parsedStage, field), "antialiasing"))
+                                spriteName.antialiasing = fieldname.antialiasing;
+
+                            if (Reflect.hasField(Reflect.field(parsedStage, field), "graphicSize"))
+                                spriteName.setGraphicSize(Std.int(spriteName.width * fieldname.graphicSize));
+
+                            if (Reflect.hasField(Reflect.field(parsedStage, field), "scrollFactor"))
+                                spriteName.scrollFactor.set(assetScrollX, assetScrollY);
+                            //another if??
+                            if (Reflect.hasField(Reflect.field(parsedStage, field), "gfBehindSomething"))
+                                gfBehind = fieldname.gfBehindSomething;
+                            //hello if...
+                            if (Reflect.hasField(Reflect.field(parsedStage, field), "dadBehindSomething"))
+                                dadBehind = fieldname.dadBehindSomething;
+                            //finally adding the sprite
+
+                            spriteName.active = false;
+                            if (gfBehind == false && dadBehind == false)
+                                add(spriteName);
+
+                            if (gfBehind == true) //time for a million errors
+                                BGaboveGF = spriteName;
+                            if (dadBehind == true)
+                                BGaboveDAD = spriteName;
+                        }
+
+                    } else //uh oh this doesnt exist LOAD THE DEFAULT STAGE INSTEAD
+                    {
                     defaultCamZoom = 0.9;
                     curStage = 'stage';
                     var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
@@ -1202,6 +1269,7 @@ class PlayState extends MusicBeatState
                     stageCurtains.active = false;
 
                     add(stageCurtains);
+                    }
             }
         }
 
@@ -1341,11 +1409,22 @@ class PlayState extends MusicBeatState
 
         add(gf);
 
+        if (gfBehind = true){
+            if (dadBehind = false){
+                add(BGaboveGF);
+            }
+        }
+
         // Shitty layering but whatev it works LOL
         if (curStage == 'limo')
             add(limo);
 
         add(dad);
+
+        if (dadBehind = true){
+            add(BGaboveDAD);
+        }
+
         add(boyfriend);
 
         var doof:DialogueBox = new DialogueBox(false, dialogue);
@@ -2502,7 +2581,7 @@ class PlayState extends MusicBeatState
                             dad.playAnim('singLEFT' + altAnim, true);
                     }
 
-                    if (SONG.player2 == 'ruv') //very specific shit for if you decide to mod this character in! fun!!
+                    if (SONG.player2 == 'ruv') //just a lil easter egg for the curious ones ehehe
                     {
                         FlxG.camera.shake(0.01, 0.05);
                     }
@@ -3415,7 +3494,7 @@ class PlayState extends MusicBeatState
             }
 
 
-            if (SONG.player1 == 'ruv') //very specific shit for if you decide to mod this character in! fun!!
+            if (SONG.player1 == 'ruv') //just a lil easter egg for the curious ones ehehe
             {
                 FlxG.camera.shake(0.01, 0.05);
             }
