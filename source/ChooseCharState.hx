@@ -126,7 +126,7 @@ class ChooseCharState extends MusicBeatState
         super.update(elapsed);
         if (controls.BACK) {
             FlxG.switchState(new ModifierState());
-            DiscordClient.changePresence("In the Menus", null);
+            DiscordClient.changePresence('In the Freeplay menu', 'Choosing a song...');
         }
         if (controls.UP_P)
         {
@@ -198,7 +198,7 @@ class ChooseCharState extends MusicBeatState
         if (curChar == null)
             curChar = "bf";
         add(char);
-
+        DiscordClient.changePresence("Choosin' the Character", "Player 1: "+PlayState.SONG.player1+", Player 2: "+PlayState.SONG.player2);
     }
     // well yeah it lags you are creating a new character
     function swapMenus() { //this doesnt lag anymore because im a god
@@ -216,7 +216,6 @@ class ChooseCharState extends MusicBeatState
         add(char);
         if (char.like != "gf")
             char.playAnim("idle");
-        DiscordClient.changePresence("Choosin' the Character", "Player 1: "+PlayState.SONG.player1+", Player 2: "+PlayState.SONG.player2);
         trace('switchin the swag');
     }
 }

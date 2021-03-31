@@ -20,9 +20,7 @@ import flash.media.Sound;
 import haxe.Json;
 import tjson.TJSON;
 import Song.SwagSong;
-#if desktop
-import Discord.DiscordClient;
-#end
+import Discord;
 import haxe.Json;
 import tjson.TJSON;
 
@@ -159,6 +157,8 @@ class FreeplayState extends MusicBeatState
 
 			trace(md);
 		 */
+
+		DiscordClient.changePresence('In the Freeplay menu', 'Choosing a song...');
 
 		super.create();
 	}
