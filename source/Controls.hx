@@ -520,7 +520,7 @@ class Controls extends FlxActionSet
 				inline bindKeys(Control.LEFT, [A, FlxKey.LEFT, H]);
 				inline bindKeys(Control.RIGHT, [D, FlxKey.RIGHT, L]);
 				inline bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
-				inline bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
+				inline bindKeys(Control.BACK, [ESCAPE]); //no backspace for u
 				inline bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
 				inline bindKeys(Control.RESET, [R]);
 				inline bindKeys(Control.SECONDARY, [E]);

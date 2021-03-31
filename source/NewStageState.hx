@@ -102,8 +102,8 @@ class NewStageState extends MusicBeatState
 	function writeCharacters() {
 		// check to see if directory exists
 		#if sys
-		if (!FileSystem.exists('assets/images/custom_stages/'+nameText.text)) {
-			FileSystem.createDirectory('assets/images/custom_stages/'+nameText.text);
+		if (!FileSystem.exists('assets/custom/stage/'+nameText.text)) {
+			FileSystem.createDirectory('assets/custom/stage/'+nameText.text);
 		}
 
 		for (epicFile in epicFiles) {
@@ -113,11 +113,11 @@ class NewStageState extends MusicBeatState
 			File.copy(epicFile,pathString);
 		}
 
-		var epicStageFile:Dynamic =CoolUtil.parseJson(Assets.getText('assets/images/custom_stages/custom_stages.json'));
+		var epicStageFile:Dynamic =CoolUtil.parseJson(Assets.getText('assets/custom/stage/custom_stages.json'));
 		trace("parsed");
 		Reflect.setField(epicStageFile,nameText.text,likeText.text);
 
-		File.saveContent('assets/images/custom_stages/custom_stages.json', CoolUtil.stringifyJson(epicStageFile));
+		File.saveContent('assets/custom/stage/custom_stages.json', CoolUtil.stringifyJson(epicStageFile));
 		trace("cool stuff");
 		#end
 	}

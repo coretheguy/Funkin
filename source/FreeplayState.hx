@@ -234,7 +234,7 @@ class FreeplayState extends MusicBeatState
 				trace("UH OH SONG IN SPECIFIED DIFFICULTY DOESN'T EXIST\nUSING DEFAULT DIFFICULTY");
 				poop = songs[curSelected];
 				curDifficulty = 1;
-			}
+			} //no such difficulty exists? tough luck buddy
 
 			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].toLowerCase());
 			PlayState.isStoryMode = false;

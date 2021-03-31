@@ -51,6 +51,9 @@ class ChooseCharState extends MusicBeatState
 
     var dadMenu:Bool = false;
 
+    var stageText:FlxUIInputText;
+    var gfText:FlxUIInputText;
+
 
     public function new(anim:String = "bf")
     {
@@ -70,12 +73,18 @@ class ChooseCharState extends MusicBeatState
         menuBG.antialiasing = true;
         add(menuBG);
 
+        stageText = new FlxUIInputText(100,50,70, PlayState.SONG.stage);
+        gfText = new FlxUIInputText(100, 10, 70, PlayState.SONG.gf);
+
         var charJson:Dynamic = null;
 
         char = new Character(400, 100, anim);
         add(char);
 
         char.flipX = false;
+
+        add(stageText);
+        add(gfText);
 
 
         var regCharacters:Array<String> = CoolUtil.coolTextFile('assets/data/characterList.txt');
@@ -134,6 +143,10 @@ class ChooseCharState extends MusicBeatState
 
         if (controls.ACCEPT)
             chooseSelection();
+
+        PlayState.SONG.gf = gfText.text;
+        PlayState.SONG.stage = stageText.text;
+
     }
 
     function changeSelection(change:Int = 0)

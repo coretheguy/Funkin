@@ -8,6 +8,8 @@ import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import Song.SwagSong;
+import Discord;
 
 /**
 	*DEBUG MODE
@@ -27,6 +29,7 @@ class AnimationDebug extends FlxState
 	var daAnim:String = 'spooky';
 	var daOtherAnim:String = 'bf';
 	var camFollow:FlxObject;
+	var SONG:SwagSong;
 
 	public function new(daAnim:String = 'spooky', daOtherAnim:String = 'bf')
 	{
@@ -82,6 +85,8 @@ class AnimationDebug extends FlxState
 		add(camOffsetText);
 
 		FlxG.camera.follow(camFollow);
+
+		DiscordClient.changePresence("animation debug", "lmao");
 
 		super.create();
 	}
@@ -203,22 +208,32 @@ class AnimationDebug extends FlxState
 			camFollow.y = 0;
 		}
 
-		//if (FlxG.keys.justPressed.T) // this is supposed to swap the character whose anims ur editing, i dont know why its not working
-		//{
-		//	updateTexts();
-		//
-		//	if (char == bf)
-		//		char == dad;
-		//	if (char == dad)
-		//		char == bf;
-		//
-		//	updateTexts();
-		//	genBoyOffsets(false);
-		//	char.playAnim(animList[curAnim]);
-		//}
+		if (FlxG.keys.justPressed.T) // this is supposed to swap the character whose anims ur editing, i dont know why its not working
+		{
+			updateTexts();
+
+			daAnim = SONG.player1;
+			if(daAnim == SONG.player1)
+				daAnim = SONG.player2;
+
+			remove(dad);
+			dad = new Character(100, 100, daAnim);
+			dad.debugMode = true;
+			add(dad);
+
+			char = dad;
+			dad.flipX = false;
+
+			trace(daAnim);
+
+			updateTexts();
+			genBoyOffsets(false);
+			char.playAnim(animList[curAnim]);
+		}
 
 		if (FlxG.keys.justPressed.ENTER)
 		{
+			DiscordClient.changePresence("In the Menus", null);
 			FlxG.switchState(new FreeplayState());
 		}
 

@@ -13,22 +13,22 @@ using StringTools;
 
 typedef SwagSong =
 {
-var song:String;
-var notes:Array<SwagSection>;
-var bpm:Int;
-var needsVoices:Bool;
-var speed:Float;
+	var song:String;
+	var notes:Array<SwagSection>;
+	var bpm:Int;
+	var needsVoices:Bool;
+	var speed:Float;
 
-var player1:String;
-var player2:String;
-var stage:String;
-var gf:String;
-var isMoody:Null<Bool>;
-var cutsceneType:String;
-var uiType:String;
-var isSpooky:Null<Bool>;
-var isHey:Null<Bool>;
-var validScore:Bool;
+	var player1:String;
+	var player2:String;
+	var stage:String;
+	var gf:String;
+	var isMoody:Null<Bool>;
+	var cutsceneType:String;
+	var uiType:String;
+	var isSpooky:Null<Bool>;
+	var isHey:Null<Bool>;
+	var validScore:Bool;
 }
 
 class Song
@@ -36,8 +36,6 @@ class Song
 	public var song:String;
 	public var notes:Array<SwagSection>;
 	public var bpm:Int;
-	public var sections:Int;
-	public var sectionLengths:Array<Dynamic> = [];
 	public var needsVoices:Bool = true;
 	public var speed:Float = 1;
 
@@ -57,11 +55,6 @@ class Song
 		this.song = song;
 		this.notes = notes;
 		this.bpm = bpm;
-
-		for (i in 0...notes.length)
-		{
-			this.sectionLengths.push(notes[i]);
-		}
 	}
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
@@ -187,7 +180,7 @@ class Song
 			parsedJson.needsVoices = realJson.needsVoices;
 			parsedJson.speed = realJson.speed;
 		}
-		return parseJSONshit(rawJson);
+		return parsedJson;
 	}
 
 	public static function parseJSONshit(rawJson:String):SwagSong
