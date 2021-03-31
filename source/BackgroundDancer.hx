@@ -19,7 +19,7 @@ class BackgroundDancer extends FlxSprite
 	{
 		super(x, y);
 		if (type == "normal") {
-			frames = Paths.getSparrowAtlas("limo/limoDancer");
+			frames = Paths.getSparrowAtlas("limo/limoDancer", 'week4');
 		} else {
 			var rawPic:BitmapData;
 			var rawXml:String;

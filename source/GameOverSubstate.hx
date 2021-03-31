@@ -26,6 +26,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	var camFollow:FlxObject;
 
 	var stageSuffix:String = "";
+	var stagePathShit:String = null; //you love to see it
 
 	public function new(x:Float, y:Float)
 	{
@@ -50,11 +51,16 @@ class GameOverSubstate extends MusicBeatSubstate
 					// gotta deal with this dude
 					daBf = p1 + '-dead';
 					stageSuffix = '-pixel';
+					stagePathShit = 'week6';
+
 				default:
 					if (StringTools.contains(unparsedAnimJson, "firstDeath")){ //if i had to build this for any longer i would lose my mind
 						daBf = p1; //this should be less shitty
 						if (parsedAnimJson.isPixel)
+						{
 							stageSuffix = '-pixel'; //pixel check!
+							stagePathShit = 'week6'; //lmao
+						}
 					}
 					else{
 						// just use bf, avoid pain
@@ -118,7 +124,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.finished)
 		{
-			FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix));
+			FlxG.sound.playMusic(Paths.music('gameOver' + stageSuffix, stagePathShit));
 		}
 
 		if (FlxG.sound.music.playing)
