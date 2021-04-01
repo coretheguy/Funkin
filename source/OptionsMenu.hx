@@ -32,7 +32,9 @@ class OptionsMenu extends MusicBeatState
 			"\nAccuracy " + (!FlxG.save.data.accuracyDisplay ? "off" : "on") +
 			"\nSong Position " + (!FlxG.save.data.songPosition ? "off" : "on") +
 			"\nEtterna Mode " + (!FlxG.save.data.etternaMode ? "off" : "on") +
-			"\nLoad replays");
+			"\nLoad replays" +
+			'\n New Character' +
+			'\n New Song');
 
 		trace(controlsStrings);
 
@@ -138,6 +140,12 @@ class OptionsMenu extends MusicBeatState
 				case 6:
 					trace('switch');
 					FlxG.switchState(new LoadReplayState());
+				case 7:
+					trace('switch');
+					FlxG.switchState(new NewCharacterState());
+				case 8:
+					trace('switch');
+					FlxG.switchState(new NewSongState());
 			}
 		}
 		FlxG.save.flush();

@@ -101,7 +101,6 @@ class NewStageState extends MusicBeatState
 	}
 	function writeCharacters() {
 		// check to see if directory exists
-		#if sys
 		if (!FileSystem.exists('assets/custom/stage/'+nameText.text)) {
 			FileSystem.createDirectory('assets/custom/stage/'+nameText.text);
 		}
@@ -119,6 +118,5 @@ class NewStageState extends MusicBeatState
 
 		File.saveContent('assets/custom/stage/custom_stages.json', CoolUtil.stringifyJson(epicStageFile));
 		trace("cool stuff");
-		#end
 	}
 }
