@@ -140,6 +140,11 @@ class PlayState extends MusicBeatState
     var phillyTrain:FlxSprite;
     var trainSound:FlxSound;
 
+    // this'll work... right?
+    var backgroundgroup:FlxTypedGroup<BeatSprite>;
+    var foregroundgroup:FlxTypedGroup<BeatSprite>;
+    var gffggroup:FlxTypedGroup<BeatSprite>;
+
     var limo:FlxSprite;
     var grpLimoDancers:FlxTypedGroup<BackgroundDancer>;
     var fastCar:FlxSprite;
@@ -179,6 +184,7 @@ class PlayState extends MusicBeatState
     var dadBehind = false;
     var BGaboveGF:FlxSprite;
     var BGaboveDAD:FlxSprite;
+
 
     override public function create()
     {
@@ -1184,9 +1190,44 @@ class PlayState extends MusicBeatState
                     bg.scale.set(6, 6);
                     add(bg);
                 default: //THERE IS NO STAGE!!!
-                    if (FileSystem.exists('assets/custom/stage/'+SONG.stage+"/"+SONG.stage+".json")){ // LOAD A TRUE CUSTOM STAGE
+                    if (FileSystem.exists('assets/custom/stage/' + SONG.stage + ".json")){ // LOAD A TRUE CUSTOM STAGE
 
-                        var parsedStage = CoolUtil.parseJson(File.getContent('assets/custom/stage/'+SONG.stage+"/"+SONG.stage+".json")); //parse shit
+                        curStage = "custom";
+                        // use assets
+                        var parsedStageJson = CoolUtil.parseJson(File.getContent("assets/custom/stage/custom_stages.json"));
+                        var parsedFuckeeJson:FunkinUtility.Stage = new json2object.JsonParser<FunkinUtility.Stage>().fromJson(File.getContent("assets/custom/stage/"
+                        + SONG.stage + ".json")/*,
+                        "assets/custom/stage/"
+                        + SONG.stage
+                        + ".json"*/);
+                        // now we must read the file properly. Oh dear.
+                        // todo
+                        trace(parsedFuckeeJson);
+
+                        backgroundgroup = new FlxTypedGroup<BeatSprite>();
+                        add(backgroundgroup);
+
+
+
+
+                        defaultCamZoom = parsedFuckeeJson.camzoom;
+
+                        for (stage in parsedFuckeeJson.stages) {
+                            if (stage.name == "default") {
+                                for (sprite in stage.sprites) {
+                                    sprite.graphicpath = "assets/custom/stage/"+SONG.stage+"/";
+                                    var coolsprite:BeatSprite = sprite.convertToBeatSprite();
+                                    trace(coolsprite);
+                                    backgroundgroup.add(coolsprite);
+                                    trace(backgroundgroup.members);
+                                }
+                            }
+                        }
+                        /*trace(backgroundgroup.members);
+                        add(backgroundgroup);*/
+
+                        /*var stageJson = File.getContent('assets/custom/stage/'+SONG.stage+"/"+SONG.stage+".json");
+                        var parsedStage = cast CoolUtil.parseJson(stageJson).stage; //parse shit
 
                         curStage = parsedStage.name;
 
@@ -1208,29 +1249,29 @@ class PlayState extends MusicBeatState
                                 trace("IMAGE COULDNT LOAD SOMEHOW (not good)");
                             }
 
-                            var assetX = if (fieldname.pos != null) fieldname.pos[0] else 0;
-                            var assetY = if (fieldname.pos != null) fieldname.pos[1] else 0;
+                            var assetX = if (Reflect.field(parsedStage, field).pos != null) Reflect.field(parsedStage, field).pos[0] else 0;
+                            var assetY = if (Reflect.field(parsedStage, field).pos != null) Reflect.field(parsedStage, field).pos[1] else 0;
 
-                            var assetScrollX = if (fieldname.scrollFactor != null) fieldname.scrollFactor[0] else 0;
-                            var assetScrollY = if (fieldname.scrollFactor != null) fieldname.scrollFactor[1] else 0;
+                            var assetScrollX = if (Reflect.field(parsedStage, field).scrollFactor != null) Reflect.field(parsedStage, field).scrollFactor[0] else 0;
+                            var assetScrollY = if (Reflect.field(parsedStage, field).scrollFactor != null) Reflect.field(parsedStage, field).scrollFactor[1] else 0;
 
 
                             var spriteName:FlxSprite = new FlxSprite(assetX, assetY).loadGraphic(spritePic);
 
                             if (Reflect.hasField(Reflect.field(parsedStage, field), "antialiasing"))
-                                spriteName.antialiasing = fieldname.antialiasing;
+                                spriteName.antialiasing = Reflect.field(parsedStage, field).antialiasing;
 
                             if (Reflect.hasField(Reflect.field(parsedStage, field), "graphicSize"))
-                                spriteName.setGraphicSize(Std.int(spriteName.width * fieldname.graphicSize));
+                                spriteName.setGraphicSize(Std.int(spriteName.width * Reflect.field(parsedStage, field).graphicSize));
 
                             if (Reflect.hasField(Reflect.field(parsedStage, field), "scrollFactor"))
                                 spriteName.scrollFactor.set(assetScrollX, assetScrollY);
                             //another if??
                             if (Reflect.hasField(Reflect.field(parsedStage, field), "gfBehindSomething"))
-                                gfBehind = fieldname.gfBehindSomething;
+                                gfBehind = Reflect.field(parsedStage, field).gfBehindSomething;
                             //hello if...
                             if (Reflect.hasField(Reflect.field(parsedStage, field), "dadBehindSomething"))
-                                dadBehind = fieldname.dadBehindSomething;
+                                dadBehind = Reflect.field(parsedStage, field).dadBehindSomething;
                             //finally adding the sprite
 
                             spriteName.active = false;
@@ -1241,7 +1282,7 @@ class PlayState extends MusicBeatState
                                 BGaboveGF = spriteName;
                             if (dadBehind == true)
                                 BGaboveDAD = spriteName;
-                        }
+                        }*/
 
                     } else //uh oh this doesnt exist LOAD THE DEFAULT STAGE INSTEAD
                     {
@@ -1334,6 +1375,11 @@ class PlayState extends MusicBeatState
                 dad.y += 100;
                 camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
             default:
+                if(curStage == 'custom'){
+                    var customStageJson:FunkinUtility.Stage = new json2object.JsonParser<FunkinUtility.Stage>().fromJson(File.getContent("assets/custom/stage/" + SONG.stage + ".json"));
+                    dad.x += customStageJson.enemyoffsetX;
+                    dad.y += customStageJson.enemyoffsetY;
+                }
                 dad.x += dad.enemyOffsetX;
                 dad.y += dad.enemyOffsetY;
                 camPos.x += dad.camOffsetX;
@@ -1355,8 +1401,11 @@ class PlayState extends MusicBeatState
         switch (SONG.player1) // no clue why i didnt think of this before lol
         {
             default:
-                //boyfriend.x += boyfriend.bfOffsetX; //just use sprite offsets
-                //boyfriend.y += boyfriend.bfOffsetY;
+                if(curStage == 'custom'){
+                var customStageJson:FunkinUtility.Stage = new json2object.JsonParser<FunkinUtility.Stage>().fromJson(File.getContent("assets/custom/stage/" + SONG.stage + ".json"));
+                boyfriend.x += customStageJson.bfoffsetX; //just use sprite offsets
+                boyfriend.y += customStageJson.bfoffsetY;
+                }
                 camPos.x += boyfriend.camOffsetX;
                 camPos.y += boyfriend.camOffsetY;
                 if (boyfriend.like == "gf") {
@@ -1409,21 +1458,36 @@ class PlayState extends MusicBeatState
 
         add(gf);
 
-        if (gfBehind = true){
-            if (dadBehind = false){
-                add(BGaboveGF);
-            }
+
+        if(curStage == 'custom'){
+
+            var parsedStageJson = CoolUtil.parseJson(File.getContent("assets/custom/stage/custom_stages.json"));
+            var parsedFuckeeJson:FunkinUtility.Stage = new json2object.JsonParser<FunkinUtility.Stage>().fromJson(File.getContent("assets/custom/stage/"
+            + SONG.stage + ".json"));
+
+        foregroundgroup = new FlxTypedGroup<BeatSprite>();
+        add(foregroundgroup);
+
+            for (stage in parsedFuckeeJson.stages) {
+            if (stage.name == "front") {
+                for (sprite in stage.sprites)
+                {
+                    sprite.graphicpath = "assets/custom/stage/" + SONG.stage+"/";
+                    var coolsprite:BeatSprite = sprite.convertToBeatSprite();
+                    foregroundgroup.add(coolsprite);
+                    trace(backgroundgroup.members);
+                }
+            }}
+
         }
+
+
 
         // Shitty layering but whatev it works LOL
         if (curStage == 'limo')
             add(limo);
 
         add(dad);
-
-        if (dadBehind = true){
-            add(BGaboveDAD);
-        }
 
         add(boyfriend);
 

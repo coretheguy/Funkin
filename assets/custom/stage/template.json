@@ -1,0 +1,24 @@
+{
+    "stages": [
+        {
+            "name": "default",
+            "sprites": [
+                {
+                    "x": -200,
+                    "y": -100,
+                    "graphic": "stageback",
+					"scrollFactorX": 0.9,
+					"scrolLFactorY": 0.9
+                },
+				{
+                    "x": -650,
+                    "y": -100,
+                    "graphic": "stagefront",
+					"scrollFactorX": 0.2,
+					"scrolLFactorY": 0.2,
+					"scale": 0.25
+                }
+            ]
+        }
+    ]
+}
