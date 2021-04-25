@@ -5,6 +5,10 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flash.display.BitmapData;
+import sys.io.File;
+import sys.FileSystem;
+import haxe.io.Path;
+import openfl.utils.ByteArray;
 using StringTools;
 /**
  * Nice converter to convert funkin objects to regular objects
@@ -174,7 +178,11 @@ class JSONFunkinSprite {
         trace("checked pos vars");
         if (animation != null) {
             trace(animation);
-            var tex = FlxAtlasFrames.fromSparrow(graphicpath + graphic + '.png', graphicpath + graphic + '.xml');
+
+            var rawPng = BitmapData.fromFile(graphicpath + graphic + ".png");
+            var rawXml = File.getContent(graphicpath + graphic + ".xml");
+
+            var tex = FlxAtlasFrames.fromSparrow(rawPng, rawXml);
             beatsprite.frames = tex;
             for (anim in animation)
             {
