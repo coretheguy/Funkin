@@ -38,6 +38,8 @@ class Character extends FlxSprite
 	public var like:String = "bf";
 	public var isDie:Bool = false;
 	public var isPixel:Bool = false;
+	public var singshake:Bool = false;
+
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
 		animOffsets = new Map<String, Array<Dynamic>>();
@@ -602,6 +604,7 @@ class Character extends FlxSprite
 					midpointX = if (parsedAnimJson.midpoint != null) parsedAnimJson.midpoint[0] else 0;
 					midpointY = if (parsedAnimJson.midpoint != null) parsedAnimJson.midpoint[1] else 0;
 					flipX = if (parsedAnimJson.flipx != null) parsedAnimJson.flipx else false;
+					singshake = if (parsedAnimJson.singShake != null) parsedAnimJson.singShake else false;
 
 					like = parsedAnimJson.like;
 					if (like == "bf-car") {
@@ -618,6 +621,12 @@ class Character extends FlxSprite
 						width += if (parsedAnimJson.size != null) parsedAnimJson.size[0] else 0;
 						height += if (parsedAnimJson.size != null) parsedAnimJson.size[1] else 0;
 					}
+
+					if (parsedAnimJson.flatsize != null){
+						setGraphicSize(Std.int(width * parsedAnimJson.flatsize));
+						updateHitbox();
+					}
+
 					playAnim(parsedAnimJson.playAnim);
 				} else {
 					// uh oh we got an error

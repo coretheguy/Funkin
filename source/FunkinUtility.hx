@@ -331,10 +331,16 @@ var funkelse : Funktion;
 typedef Stage = {
 var stages : Array<StageGroup>;
 @:default(1) @:optional var camzoom : Float;
+
 @:default(0) @:optional var bfoffsetX : Float;
 @:default(0) @:optional var enemyoffsetX : Float;
 @:default(0) @:optional var bfoffsetY : Float;
 @:default(0) @:optional var enemyoffsetY : Float;
+
+@:default(0) @:optional var dadfollowcamX : Int;
+@:default(0) @:optional var bffollowcamX : Int;
+@:default(0) @:optional var bffollowcamY : Int;
+@:default(0) @:optional var dadfollowcamY : Int;
 }
 /**
  * A register of all data currently being used, like the offset.

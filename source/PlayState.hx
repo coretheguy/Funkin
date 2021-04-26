@@ -168,6 +168,12 @@ class PlayState extends MusicBeatState
 
     var defaultCamZoom:Float = 1.05;
 
+    var BFstageFollowcamX:Int = 0;
+    var BFstageFollowcamY:Int = 0;
+
+    var DADstageFollowcamX:Int = 0;
+    var DADstageFollowcamY:Int = 0;
+
     public static var daPixelZoom:Float = 6;
 
     public static var theFunne:Bool = true;
@@ -1211,6 +1217,12 @@ class PlayState extends MusicBeatState
 
 
                         defaultCamZoom = parsedFuckeeJson.camzoom;
+
+                        BFstageFollowcamX = parsedFuckeeJson.bffollowcamX;
+                        BFstageFollowcamY = parsedFuckeeJson.bffollowcamY;
+
+                        DADstageFollowcamX = parsedFuckeeJson.dadfollowcamX;
+                        DADstageFollowcamY = parsedFuckeeJson.dadfollowcamY;
 
                         for (stage in parsedFuckeeJson.stages) {
                             if (stage.name == "default") {
@@ -2491,6 +2503,9 @@ class PlayState extends MusicBeatState
                     case 'senpai-angry':
                         camFollow.y = dad.getMidpoint().y - 430;
                         camFollow.x = dad.getMidpoint().x - 100;
+                    default:
+                        camFollow.x = dad.getMidpoint().x - DADstageFollowcamX;
+                        camFollow.y = dad.getMidpoint().y - DADstageFollowcamY;
                 }
 
                 if (dad.curCharacter == 'mom')
@@ -2518,6 +2533,9 @@ class PlayState extends MusicBeatState
                     case 'schoolEvil':
                         camFollow.x = boyfriend.getMidpoint().x - 200;
                         camFollow.y = boyfriend.getMidpoint().y - 200;
+                    default:
+                        camFollow.x = boyfriend.getMidpoint().x - BFstageFollowcamX;
+                        camFollow.y = boyfriend.getMidpoint().y - BFstageFollowcamY;
                 }
 
                 if (SONG.song.toLowerCase() == 'tutorial')
@@ -2645,7 +2663,7 @@ class PlayState extends MusicBeatState
                             dad.playAnim('singLEFT' + altAnim, true);
                     }
 
-                    if (SONG.player2 == 'ruv') //just a lil easter egg for the curious ones ehehe
+                    if (dad.singshake == true) //just a lil easter egg for the curious ones ehehe
                     {
                         FlxG.camera.shake(0.01, 0.05);
                     }
@@ -3558,7 +3576,7 @@ class PlayState extends MusicBeatState
             }
 
 
-            if (SONG.player1 == 'ruv') //just a lil easter egg for the curious ones ehehe
+            if (boyfriend.singshake == true) //just a lil easter egg for the curious ones ehehe
             {
                 FlxG.camera.shake(0.01, 0.05);
             }
