@@ -537,10 +537,10 @@ class ChartingState extends MusicBeatState
 			writingNotes = !writingNotes;
 		}
 
-		if (writingNotes)
+		/*if (writingNotes)
 			writingNotesText.text = "WRITING NOTES";
 		else
-			writingNotesText.text = "NOT WRITING NOTES";
+			writingNotesText.text = "NOT WRITING NOTES";*/
 
 		Conductor.songPosition = FlxG.sound.music.time;
 		_song.song = typingShit.text;
