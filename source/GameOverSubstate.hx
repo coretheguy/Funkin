@@ -47,6 +47,8 @@ class GameOverSubstate extends MusicBeatSubstate
 				case "bf":
 					// bf has a death animation
 					daBf = p1;
+				case "bf-holding-gf":
+					daBf = p1 + '-dead';
 				case "bf-pixel":
 					// gotta deal with this dude
 					daBf = p1 + '-dead';

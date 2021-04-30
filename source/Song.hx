@@ -92,6 +92,8 @@ class Song
 				parsedJson.stage = 'school';
 			} else if (parsedJson.song.toLowerCase() == 'thorns'){
 				parsedJson.stage = 'schoolEvil';
+			} else if (parsedJson.song.toLowerCase() == "ugh" || parsedJson.song.toLowerCase() == "stress" || parsedJson.song.toLowerCase() == "guns"){
+				parsedJson.stage = 'tank';
 			} else {
 				parsedJson.stage = 'stage';
 			}
@@ -110,6 +112,11 @@ class Song
 					parsedJson.gf = 'gf-pixel';
 				case 'schoolEvil':
 					parsedJson.gf = 'gf-pixel';
+				case 'tank':
+					parsedJson.gf = 'gf-tankmen';
+					if (parsedJson.song.toLowerCase() == "stress") {
+						parsedJson.gf = "pico-speaker";
+					}
 				default:
 					parsedJson.gf = 'gf';
 			}
@@ -143,6 +150,12 @@ class Song
 					parsedJson.cutsceneType = 'spirit';
 				case 'winter-horrorland':
 					parsedJson.cutsceneType = 'monster';
+				case 'ugh':
+					parsedJson.cutsceneType = 'ugh-mp4';
+				case 'guns':
+					parsedJson.cutsceneType = 'guns-mp4';
+				case 'stress':
+					parsedJson.cutsceneType = 'stress-mp4';
 				default:
 					parsedJson.cutsceneType = 'none';
 			}

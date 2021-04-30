@@ -23,7 +23,7 @@ import flixel.util.FlxTimer;
 import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Assets;
-import polymod.Polymod;
+//import polymod.Polymod;
 import haxe.Json;
 import tjson.TJSON;
 using StringTools;
@@ -51,9 +51,9 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		#if polymod
+		/*#if polymod
 		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
-		#end
+		#end*/
 
 		#if sys
 		if (!sys.FileSystem.exists(Sys.getCwd() + "\\assets\\replays"))

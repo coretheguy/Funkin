@@ -5,6 +5,7 @@ import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flash.display.BitmapData;
 import lime.utils.Assets;
+import flixel.FlxG;
 import lime.system.System;
 import lime.app.Application;
 #if sys
@@ -17,6 +18,13 @@ import haxe.Json;
 import tjson.TJSON;
 import haxe.format.JsonParser;
 using StringTools;
+
+enum abstract EpicLevel(Int) from Int to Int {
+	var Level_NotAHoe = 0;
+	var Level_Boogie = 1;
+	var Level_Sadness = 2;
+	var Level_Sing = 3;
+}
 
 class Character extends FlxSprite
 {
@@ -35,10 +43,27 @@ class Character extends FlxSprite
 	public var midpointY:Int = 0;
 	public var isCustom:Bool = false;
 	public var holdTimer:Float = 0;
+	public var animationNotes:Array<Dynamic> = [];
 	public var like:String = "bf";
 	public var isDie:Bool = false;
 	public var isPixel:Bool = false;
 	public var singshake:Bool = false;
+//	public var zoom:Float = 1.0;
+
+	// sits on speakers, replaces gf
+	public var likeGf:Bool = false;
+	/**
+	 * how many animations our current gf supports.
+	 * acts like a level meter, 0 means we aren't gf,
+	 * 1 means we support the least animations (i think pixel-gf)
+	 * 2 means we support the middle amount of animations (i think gf-car)
+	 * 3 means we support the full amount of animations (regular gf)
+	 * you can have an epic level lower than your actual animations,
+	 * but the game will be safe and act like you don't have one.
+	 */
+	public var gfEpicLevel:Int = Level_NotAHoe; // for some strange reason idea thinks this is an error, but the game still compiles just fine so...
+	// like bf, is playable
+	public var likeBf:Bool = false;
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -85,6 +110,10 @@ class Character extends FlxSprite
 
 				playAnim('danceRight');
 
+				like = "gf";
+				likeGf = true;
+				gfEpicLevel = Level_Sing;
+
 			case 'gf-christmas':
 				tex = Paths.getSparrowAtlas('christmas/gfChristmas', 'week5');
 				frames = tex;
@@ -116,6 +145,10 @@ class Character extends FlxSprite
 
 				playAnim('danceRight');
 
+				like ="gf";
+				likeGf = true;
+				gfEpicLevel = Level_Sing;
+
 			case 'gf-car':
 				tex = Paths.getSparrowAtlas('gfCar', 'week4');
 				frames = tex;
@@ -128,6 +161,10 @@ class Character extends FlxSprite
 				addOffset('danceRight', 0);
 
 				playAnim('danceRight');
+
+				like = "gf-car";
+				likeGf = true;
+				gfEpicLevel = Level_Boogie;
 
 			case 'gf-pixel':
 				tex = Paths.getSparrowAtlas('weeb/gfPixel', 'week6');
@@ -144,6 +181,11 @@ class Character extends FlxSprite
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 				updateHitbox();
 				antialiasing = false;
+
+				isPixel = true;
+				like = "gf-pixel";
+				likeGf = true;
+				gfEpicLevel = Level_Boogie;
 
 			case 'dad':
 				// DAD ANIMATION LOADING CODE
@@ -162,6 +204,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN", 0, -30);
 
 				playAnim('idle');
+
+				like = "dad";
 			case 'spooky':
 				tex = Paths.getSparrowAtlas('spooky_kids_assets', 'week2');
 				frames = tex;
@@ -181,6 +225,9 @@ class Character extends FlxSprite
 				addOffset("singDOWN", -50, -130);
 
 				playAnim('danceRight');
+
+				like = "spooky";
+				gfEpicLevel = Level_Boogie;
 			case 'mom':
 				tex = Paths.getSparrowAtlas('Mom_Assets', 'week4');
 				frames = tex;
@@ -201,6 +248,8 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 
+				like = "mom";
+
 			case 'mom-car':
 				tex = Paths.getSparrowAtlas('momCar', 'week4');
 				frames = tex;
@@ -220,6 +269,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN", 20, -160);
 
 				playAnim('idle');
+
+				like = "mom";
 			case 'monster':
 				tex = Paths.getSparrowAtlas('Monster_Assets', 'week2');
 				frames = tex;
@@ -235,6 +286,9 @@ class Character extends FlxSprite
 				addOffset("singLEFT", -30);
 				addOffset("singDOWN", -30, -40);
 				playAnim('idle');
+
+				// like new monster due to new assets
+				like = "newmonster";
 			case 'monster-christmas':
 				tex = Paths.getSparrowAtlas('christmas/monsterChristmas', 'week5');
 				frames = tex;
@@ -250,6 +304,8 @@ class Character extends FlxSprite
 				addOffset("singLEFT", -30);
 				addOffset("singDOWN", -40, -94);
 				playAnim('idle');
+
+				like = "newmonster";
 			case 'pico':
 				tex = Paths.getSparrowAtlas('Pico_FNF_assetss', 'week3');
 				frames = tex;
@@ -289,6 +345,7 @@ class Character extends FlxSprite
 
 				flipX = true;
 
+				like = "pico";
 			case 'bf':
 				var tex = Paths.getSparrowAtlas('BOYFRIEND');
 				frames = tex;
@@ -328,6 +385,9 @@ class Character extends FlxSprite
 
 				flipX = true;
 
+				like = "bf";
+				likeBf = true;
+
 			case 'bf-christmas':
 				var tex = Paths.getSparrowAtlas('christmas/bfChristmas', 'week5');
 				frames = tex;
@@ -356,6 +416,9 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
+
+				like = "bf";
+				likeBf = true;
 			case 'bf-car':
 				var tex = Paths.getSparrowAtlas('bfCar', 'week4');
 				frames = tex;
@@ -381,6 +444,9 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				flipX = true;
+
+				like = "bf";
+				likeBf = true;
 			case 'bf-pixel':
 				frames = Paths.getSparrowAtlas('weeb/bfPixel', 'week6');
 				animation.addByPrefix('idle', 'BF IDLE', 24, false);
@@ -414,6 +480,10 @@ class Character extends FlxSprite
 				antialiasing = false;
 
 				flipX = true;
+
+				isPixel = true;
+				like = "bf-pixel";
+				likeBf = true;
 			case 'bf-pixel-dead':
 				frames = Paths.getSparrowAtlas('weeb/bfPixelsDEAD', 'week6');
 				animation.addByPrefix('singUP', "BF Dies pixel", 24, false);
@@ -431,6 +501,10 @@ class Character extends FlxSprite
 				updateHitbox();
 				antialiasing = false;
 				flipX = true;
+
+				isPixel = true;
+				like = "bf-pixel";
+				likeBf = true;
 
 			case 'senpai':
 				frames = Paths.getSparrowAtlas('weeb/senpai', 'week6');
@@ -452,6 +526,9 @@ class Character extends FlxSprite
 				updateHitbox();
 
 				antialiasing = false;
+
+				isPixel = true;
+				like = "senpai";
 			case 'senpai-angry':
 				frames = Paths.getSparrowAtlas('weeb/senpai', 'week6');
 				animation.addByPrefix('idle', 'Angry Senpai Idle', 24, false);
@@ -470,7 +547,10 @@ class Character extends FlxSprite
 				setGraphicSize(Std.int(width * 6));
 				updateHitbox();
 
+
+				isPixel = true;
 				antialiasing = false;
+				like = "senpai";
 
 			case 'spirit':
 				frames = Paths.getPackerAtlas('weeb/spirit', 'week6');
@@ -491,7 +571,9 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 
+				isPixel = true;
 				antialiasing = false;
+				like = "spirit";
 
 			case 'parents-christmas':
 				frames = Paths.getSparrowAtlas('christmas/mom_dad_christmas_assets', 'week5');
@@ -518,6 +600,8 @@ class Character extends FlxSprite
 				addOffset("singDOWN-alt", -30, -27);
 
 				playAnim('idle');
+
+				like = "parents";
 			default:
 			// i gave up on html at this point
 				// assume it is a custom character. if not: oh well
@@ -605,12 +689,49 @@ class Character extends FlxSprite
 					midpointY = if (parsedAnimJson.midpoint != null) parsedAnimJson.midpoint[1] else 0;
 					flipX = if (parsedAnimJson.flipx != null) parsedAnimJson.flipx else false;
 					singshake = if (parsedAnimJson.singShake != null) parsedAnimJson.singShake else false;
+					likeBf = if (parsedAnimJson.likebf != null) parsedAnimJson.likebf else false; //well aren't you funny
+
+//					zoom = if (parsedAnimJson.camzoom != null) parsedAnimJson.camzoom else 1.0;
 
 					like = parsedAnimJson.like;
 					if (like == "bf-car") {
 						// ignore it, this is used for gameover state
 						like = "bf";
 					}
+
+					if (like == "pico-speaker") {
+						loadMappedAnims();
+					}
+					if (isDie && like == "bf-holding-gf") {
+						animation.addByPrefix('firstDeath', "BF dies", 24, false);
+						animation.addByPrefix('deathLoop', "BF Dead Loop", 24, true);
+						animation.addByPrefix('deathConfirm', "BF Dead confirm", 24, false);
+						// brute force
+					}
+
+					switch(like) {
+						case "bf" |	"bf-pixel" | "bf-holding-gf":
+							likeBf = true;
+						case "gf"
+						| "gf-car"
+						| "gf-pixel"
+						| "gf-tankmen"
+							// pico is like gf, he just doesn't boogie normally
+						| "pico-speaker":
+							switch(like) {
+								case "gf":
+									gfEpicLevel = Level_Sing;
+								case "gf-tankmen":
+									gfEpicLevel = Level_Sadness;
+								case "gf-pixel"
+								| "gf-car":
+									gfEpicLevel = Level_Boogie;
+							}
+							likeGf = true;
+						case "spooky":
+							gfEpicLevel = Level_Boogie;
+					}
+
 					isPixel = parsedAnimJson.isPixel;
 					if (parsedAnimJson.isPixel) {
 						antialiasing = false;
@@ -741,10 +862,10 @@ class Character extends FlxSprite
 	{
 		if (like != "bf" && like != "bf-pixel")
 		{
-			if (animation.curAnim.name.startsWith('sing'))
+			/*if (animation.curAnim.name.startsWith('sing'))
 			{
 				holdTimer += elapsed;
-			}
+			}*/
 
 			var dadVar:Float = 4;
 
@@ -756,7 +877,25 @@ class Character extends FlxSprite
 				holdTimer = 0;
 			}
 		}
+		if (like == "pico-speaker") {
+			if (0 < animationNotes.length && Conductor.songPosition > animationNotes[0][0]) {
+				trace("shoot anim " + animationNotes[0][1]);
+				var idkWhatThisISLol = 1;
+				if (2 <= animationNotes[0][1]) {
+					idkWhatThisISLol = 3;
+				}
 
+				idkWhatThisISLol += FlxG.random.int(0, 1);
+				trace("shoot" + idkWhatThisISLol);
+				playAnim("shoot" + idkWhatThisISLol, true);
+				animationNotes.shift();
+
+			}
+			if (animation.curAnim.finished)
+			{
+				playAnim(animation.curAnim.name, false, false, animation.curAnim.frames.length - 3);
+			}
+		}
 		switch (curCharacter)
 		{
 			case 'gf':
@@ -829,7 +968,24 @@ class Character extends FlxSprite
 					else
 						playAnim('danceLeft');
 				default:
-					playAnim('idle');
+					// spooky will be considered boogie
+					if (gfEpicLevel >= cast Level_Boogie) {
+						if (!animation.curAnim.name.startsWith('hair'))
+						{
+							danced = !danced;
+							trace(danced);
+							if (danced)
+								playAnim('danceRight');
+							else
+								playAnim('danceLeft');
+						}
+					} else {
+						if (like == 'tankman' && animation.curAnim.name.endsWith('DOWN-alt')) {
+							// do nothing dumbass
+						}
+						else
+							playAnim('idle');
+					}
 			}
 		}
 	}
@@ -873,6 +1029,24 @@ class Character extends FlxSprite
 				danced = !danced;
 			}
 		}
+	}
+
+	public function loadMappedAnims() {
+		// todo, make better
+		var picoAnims = Song.loadFromJson(curCharacter, "stress").notes;
+		for (anim in picoAnims) {
+			// this code looks fucking awful because I am reading the compiled
+			// html build
+			for (note in anim.sectionNotes) {
+				animationNotes.push(note);
+			}
+		}
+		animationNotes.sort(sortAnims);
+	}
+	function sortAnims(a, b) {
+		var aThing = a[0];
+		var bThing = b[0];
+		return aThing < bThing ? -1 : 1;
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
