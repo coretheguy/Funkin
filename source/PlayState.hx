@@ -194,6 +194,9 @@ class PlayState extends MusicBeatState
 
     var defaultCamZoom:Float = 1.05;
 
+
+	var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+
     var BFstageFollowcamX:Int = 0;
     var BFstageFollowcamY:Int = 0;
 
@@ -1171,6 +1174,11 @@ class PlayState extends MusicBeatState
         if (SONG == null)
             SONG = Song.loadFromJson('tutorial');
 
+		grpNoteSplashes = new FlxTypedGroup<NoteSplash>();
+		var sploosh = new NoteSplash(100, 100, 0);
+		sploosh.alpha = 0.1;
+		grpNoteSplashes.add(sploosh);
+
         Conductor.mapBPMChanges(SONG);
         Conductor.changeBPM(SONG.bpm);
 
@@ -1420,7 +1428,10 @@ class PlayState extends MusicBeatState
         strumLineNotes = new FlxTypedGroup<FlxSprite>();
         add(strumLineNotes);
 
+		add(grpNoteSplashes);
+
         playerStrums = new FlxTypedGroup<FlxSprite>();
+		enemyStrums = new FlxTypedGroup<FlxSprite>();
 
         // startCountdown();
 
@@ -1522,6 +1533,7 @@ class PlayState extends MusicBeatState
         iconP2.y = healthBar.y - (iconP2.height / 2);
         add(iconP2);
 
+		grpNoteSplashes.cameras = [camHUD];
         strumLineNotes.cameras = [camHUD];
         notes.cameras = [camHUD];
         healthBar.cameras = [camHUD];
@@ -2754,7 +2766,7 @@ class PlayState extends MusicBeatState
 
     var endingSong:Bool = false;
 
-    private function popUpScore(strumtime:Float):Void
+	private function popUpScore(strumtime:Float, daNote:Note):Void
     {
         var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
         var wife:Float = EtternaFunctions.wife3(noteDiff, FlxG.save.data.etternaMode ? 1 : 1.7);
@@ -2852,7 +2864,11 @@ class PlayState extends MusicBeatState
                 score = 200;
             ss = false;
             goods++;
-        }
+		} else {
+			var recycledNote = grpNoteSplashes.recycle(NoteSplash);
+			recycledNote.setupNoteSplash(daNote.x, daNote.y, daNote.noteData);
+			grpNoteSplashes.add(recycledNote);
+		}
         if (daRating == 'sick')
         {
             if (health < 2)
@@ -3504,7 +3520,7 @@ class PlayState extends MusicBeatState
         {
             if (!note.isSustainNote)
             {
-                popUpScore(note.strumTime);
+				popUpScore(note.strumTime, note);
                 combo += 1;
             }
             else
