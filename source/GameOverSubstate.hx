@@ -39,7 +39,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		}
 		var characterList = Assets.getText('assets/data/characterList.txt');
 		if (!StringTools.contains(characterList, p1)) {
-			var parsedCharJson:Dynamic = CoolUtil.parseJson(Assets.getText('assets/custom/char/custom_chars.jsonc'));
+			var parsedCharJson:Dynamic = CoolUtil.parseJson(File.getContent('assets/custom/char/custom_chars.jsonc'));
 			//another CTRL+C CTRL+V ritual
 			var unparsedAnimJson = File.getContent("assets/custom/char/"+Reflect.field(parsedCharJson,p1).like+".json"); //it might keep throwing an error if i dont do this
 			var parsedAnimJson = CoolUtil.parseJson(unparsedAnimJson);

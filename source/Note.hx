@@ -36,6 +36,8 @@ class Note extends FlxSprite
 	public static var BLUE_NOTE:Int = 1;
 	public static var RED_NOTE:Int = 3;
 
+	public var rating:String = "shit";
+
 	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
 	{
 		super();
@@ -52,7 +54,10 @@ class Note extends FlxSprite
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
 		y -= 2000;
-		this.strumTime = strumTime + FlxG.save.data.offset;
+		this.strumTime = strumTime;
+
+		if (this.strumTime < 0 )
+			this.strumTime = 0;
 
 		this.noteData = noteData;
 
@@ -141,6 +146,14 @@ class Note extends FlxSprite
 				animation.play('redScroll');
 		}
 
+		// trace(prevNote);
+
+		// we make sure its downscroll and its a SUSTAIN NOTE (aka a trail, not a note)
+		// and flip it so it doesn't look weird.
+		// THIS DOESN'T FUCKING FLIP THE NOTE, CONTRIBUTERS DON'T JUST COMMENT THIS OUT JESUS
+		if (FlxG.save.data.downscroll && sustainNote)
+			flipY = true;
+
 
 		if (isSustainNote && prevNote != null)
 		{
@@ -197,7 +210,7 @@ class Note extends FlxSprite
 		{
 			// The * 0.5 is so that it's easier to hit them too late, instead of too early
 			if (strumTime > Conductor.songPosition - Conductor.safeZoneOffset
-			&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
+				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.5))
 				canBeHit = true;
 			else
 				canBeHit = false;

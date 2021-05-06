@@ -635,6 +635,8 @@ class Character extends FlxSprite
 						parsedAnimJson.animation = parsedAnimJson.deadAnimation;
 						parsedAnimJson.offset = parsedAnimJson.deadOffset;
 					}
+
+
 					var rawPic = BitmapData.fromFile('assets/custom/char/'+curCharacter+"/"+playerSuffix+".png");
 					var tex:FlxAtlasFrames;
 					var rawXml:String;
@@ -648,6 +650,7 @@ class Character extends FlxSprite
 					}
 					frames = tex;
 
+
 					for( field in Reflect.fields(parsedAnimJson.animation) ) {
 						var fps = 24;
 						if (Reflect.hasField(Reflect.field(parsedAnimJson.animation,field), "fps")) {
@@ -657,6 +660,8 @@ class Character extends FlxSprite
 						if (Reflect.hasField(Reflect.field(parsedAnimJson.animation,field), "loop")) {
 							loop = Reflect.field(parsedAnimJson.animation,field).loop;
 						}
+
+						//now add the animation
 						if (Reflect.hasField(Reflect.field(parsedAnimJson.animation,field),"flippedname") && !isPlayer) {
 							// the double not is to turn a null into a false
 							if (Reflect.hasField(Reflect.field(parsedAnimJson.animation,field),"indices")) {
@@ -676,6 +681,9 @@ class Character extends FlxSprite
 							}
 						}
 					}
+
+
+
 					for( field in Reflect.fields(parsedAnimJson.offset)) {
 						addOffset(field, Reflect.field(parsedAnimJson.offset,field)[0],  Reflect.field(parsedAnimJson.offset,field)[1]);
 					}
@@ -860,7 +868,7 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if (like != "bf" && like != "bf-pixel")
+		if (!likeBf)
 		{
 			/*if (animation.curAnim.name.startsWith('sing'))
 			{
